@@ -15,7 +15,8 @@
         </Storyboard>
     </UserControl.Resources>
 
-    <Button Command="{Binding ButtonCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+    <Button x:Name="MainButton"
+            Command="{Binding ButtonCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
             Cursor="Hand">
         <Button.RenderTransform>
             <ScaleTransform x:Name="ButtonScale" ScaleX="1" ScaleY="1"

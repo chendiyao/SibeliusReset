@@ -86,6 +86,10 @@ namespace SibeliusReset.Views
         {
             if (_viewModel == null) return;
 
+            MainButton.ApplyTemplate();
+            var buttonIcon = MainButton.Template?.FindName("ButtonIcon", MainButton) as TextBlock;
+            var sweepContainer = MainButton.Template?.FindName("SweepContainer", MainButton) as Border;
+
             // Update icon based on status
             var status = _viewModel.Status;
             string icon = status switch
@@ -96,17 +100,19 @@ namespace SibeliusReset.Views
                 AppStatus.ExpiringSoon => "⚠",
                 _ => "⟳"
             };
-            ButtonIcon.Text = icon;
+            
+            if (buttonIcon != null)
+                buttonIcon.Text = icon;
 
             // Handle sweep animation for resetting state
             if (_viewModel.IsResetting)
             {
-                SweepContainer.Visibility = Visibility.Visible;
+                if (sweepContainer != null) sweepContainer.Visibility = Visibility.Visible;
                 _sweepStoryboard?.Begin();
             }
             else
             {
-                SweepContainer.Visibility = Visibility.Collapsed;
+                if (sweepContainer != null) sweepContainer.Visibility = Visibility.Collapsed;
                 _sweepStoryboard?.Stop();
             }
         }

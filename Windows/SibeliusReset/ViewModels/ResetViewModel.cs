@@ -67,9 +67,7 @@ namespace SibeliusReset.ViewModels
         private int _remainingDays = -1;
         private string _lastResetDateString = "从未";
         private string _nextExpireDateString = "--";
-        private string _statusText = "就绪";
         private bool _isResetting;
-        private string _buttonTitle = "重置试用";
         private DateTime? _lastResetDate;
 
         // ── Constructor ──────────────────────────────────────────
