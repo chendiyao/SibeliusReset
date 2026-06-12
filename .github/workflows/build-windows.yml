@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    permissions:
+      contents: write # 允许创建 Release
 
     steps:
     - name: Checkout Code
@@ -31,3 +33,13 @@ jobs:
         name: Sibelius重置-Windows
         path: Windows/publish/Sibelius重置.exe
         compression-level: 0 # 已经是压缩的单文件，无需额外压缩
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: windows-latest
+        name: 🚀 Windows 最新版本
+        body: "自动打包的最新 Windows 客户端。下载 `Sibelius重置.exe` 后双击运行即可。"
+        files: Windows/publish/Sibelius重置.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
