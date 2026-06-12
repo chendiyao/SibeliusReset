@@ -1,0 +1,12 @@
+#!/bin/bash
+set -euo pipefail
+
+APP_PATH="/Applications/Sibelius重置.app"
+
+if [ -d "$APP_PATH" ]; then
+    /usr/bin/xattr -dr com.apple.quarantine "$APP_PATH" 2>/dev/null || true
+    /usr/sbin/chown -R root:wheel "$APP_PATH" 2>/dev/null || true
+    /bin/chmod -R a+rX "$APP_PATH" 2>/dev/null || true
+fi
+
+exit 0

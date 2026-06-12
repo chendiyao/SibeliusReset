@@ -1,0 +1,33 @@
+name: Build Windows App
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    paths:
+      - 'Windows/**'
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Publish WPF App
+      run: |
+        cd Windows/SibeliusReset
+        dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=none -p:DebugSymbols=false -o ../publish
+
+    - name: Upload EXE Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Sibelius重置-Windows
+        path: Windows/publish/Sibelius重置.exe
+        compression-level: 0 # 已经是压缩的单文件，无需额外压缩

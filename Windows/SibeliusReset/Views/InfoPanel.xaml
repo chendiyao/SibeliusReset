@@ -1,0 +1,45 @@
+<UserControl x:Class="SibeliusReset.Views.InfoPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Width="340">
+
+    <Border Height="72" CornerRadius="18" ClipToBounds="True" BorderThickness="1">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#12FFFFFF" Offset="0"/>
+                <GradientStop Color="#08FFFFFF" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>
+        <Border.BorderBrush>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#20FFFFFF" Offset="0"/>
+                <GradientStop Color="#10FFFFFF" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.BorderBrush>
+
+        <Grid Margin="20,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Row 1: Last reset date -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="🕐" FontSize="13" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBlock Text="上次重置" FontSize="12" Foreground="#6F7EA3"
+                           VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBlock x:Name="LastResetText" Text="--" FontSize="12"
+                           Foreground="#A9B6D3" VerticalAlignment="Center" FontWeight="Medium"/>
+            </StackPanel>
+
+            <!-- Row 2: Next expiry date -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="📅" FontSize="13" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBlock Text="到期时间" FontSize="12" Foreground="#6F7EA3"
+                           VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBlock x:Name="NextExpireText" Text="--" FontSize="12"
+                           Foreground="#A9B6D3" VerticalAlignment="Center" FontWeight="Medium"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>
