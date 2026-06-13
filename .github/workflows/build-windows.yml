@@ -6,13 +6,13 @@ on:
     paths:
       - 'Windows/**'
       - '.github/workflows/**'
-  workflow_dispatch: # 允许手动触发
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: windows-latest
     permissions:
-      contents: write # 允许创建 Release
+      contents: write
 
     steps:
     - name: Checkout Code
@@ -26,81 +26,13 @@ jobs:
     - name: Publish WPF App
       run: |
         cd Windows/SibeliusReset
-        dotnet publish -c Release -r win-x64 -p:DebugType=none -p:DebugSymbols=false -o ../publish
-
-    - name: Create Install Script
-      shell: pwsh
-      run: |
-        $script = @'
-        @echo off
-        chcp 65001 >nul 2>&1
-
-        echo.
-        echo  正在检查 .NET 8 运行时...
-        echo.
-
-        dotnet --list-runtimes 2>nul | findstr /C:"Microsoft.WindowsDesktop.App 8." >nul 2>&1
-        if %errorlevel% neq 0 (
-            echo  [提示] 未检测到 .NET 8 桌面运行时，正在自动安装...
-            echo.
-            start /wait dotnet-runtime\windowsdesktop-runtime-8.0.17-win-x64.exe /install /quiet /norestart
-            if %errorlevel% neq 0 (
-                echo  [错误] 运行时安装失败，请手动运行 dotnet-runtime 文件夹中的安装程序。
-                pause
-                exit /b 1
-            )
-            echo  [成功] .NET 8 运行时安装完成！
-            echo.
-        ) else (
-            echo  [成功] 已检测到 .NET 8 运行时。
-            echo.
-        )
-
-        echo  正在启动 Sibelius重置...
-        start "" "Sibelius重置.exe"
-        '@
-        Set-Content -Path "Windows/publish/启动.bat" -Value $script -Encoding UTF8
-
-    - name: Download .NET Desktop Runtime Installer
-      shell: pwsh
-      run: |
-        New-Item -ItemType Directory -Path "Windows/publish/dotnet-runtime" -Force
-        Invoke-WebRequest -Uri "https://download.visualstudio.microsoft.com/download/pr/e7e9d9a3-07c9-48cd-a0f9-9deb893de002/04d64891b55cab16ec438f72b6e33857/windowsdesktop-runtime-8.0.17-win-x64.exe" -OutFile "Windows/publish/dotnet-runtime/windowsdesktop-runtime-8.0.17-win-x64.exe"
-
-    - name: Create README
-      shell: pwsh
-      run: |
-        $readme = @'
-        ═══════════════════════════════════════
-          Sibelius 试用重置工具 - Windows 版
-        ═══════════════════════════════════════
-
-        【使用方法】
-        1. 双击运行「启动.bat」
-           - 首次使用会自动安装 .NET 运行时（约 60MB，只需安装一次）
-           - 之后会自动启动重置工具
-
-        2. 或者直接运行「Sibelius重置.exe」
-           - 如果提示缺少运行时，请先手动安装
-             dotnet-runtime 文件夹中的安装程序
-
-        【注意事项】
-        - 运行时需要管理员权限（会自动弹出 UAC 提示）
-        - 请确保 Sibelius 已关闭后再进行重置
-
-        '@
-        Set-Content -Path "Windows/publish/说明.txt" -Value $readme -Encoding UTF8
-
-    - name: Package as ZIP
-      shell: pwsh
-      run: |
-        Compress-Archive -Path "Windows/publish/*" -DestinationPath "Windows/Sibelius重置-Windows.zip" -Force
+        dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=none -p:DebugSymbols=false -o ../publish
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: Sibelius重置-Windows
-        path: Windows/Sibelius重置-Windows.zip
+        path: Windows/publish/Sibelius重置.exe
         compression-level: 0
 
     - name: Create Release
@@ -109,12 +41,8 @@ jobs:
         tag_name: windows-latest
         name: 🚀 Sibelius 重置工具 Windows 版
         body: |
-          ## 下载后使用方法
-          1. 解压 ZIP 文件
-          2. 双击运行 `启动.bat`
-          3. 首次使用会自动安装 .NET 运行时（只需一次）
-          
-          EXE 体积约 2MB，加上运行时安装包约 60MB。
-        files: Windows/Sibelius重置-Windows.zip
+          下载 `Sibelius重置.exe` 后双击运行即可，无需安装任何依赖。
+          运行时会自动弹出管理员权限提示（UAC），请点击"是"。
+        files: Windows/publish/Sibelius重置.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
