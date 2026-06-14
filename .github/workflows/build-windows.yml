@@ -23,17 +23,17 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    - name: Publish WPF App
+    - name: Publish x64 (Intel/AMD)
       run: |
         cd Windows/SibeliusReset
-        dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=none -p:DebugSymbols=false -o ../publish
+        dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=none -p:DebugSymbols=false -o ../publish/x64
+        ren ..\publish\x64\Sibelius重置.exe Sibelius重置-x64.exe
 
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: Sibelius重置-Windows
-        path: Windows/publish/Sibelius重置.exe
-        compression-level: 0
+    - name: Publish arm64 (Mac M1/M2/M3 VM)
+      run: |
+        cd Windows/SibeliusReset
+        dotnet publish -c Release -r win-arm64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=none -p:DebugSymbols=false -o ../publish/arm64
+        ren ..\publish\arm64\Sibelius重置.exe Sibelius重置-arm64.exe
 
     - name: Create Release
       uses: softprops/action-gh-release@v2
@@ -41,8 +41,13 @@ jobs:
         tag_name: windows-latest
         name: 🚀 Sibelius 重置工具 Windows 版
         body: |
-          下载 `Sibelius重置.exe` 后双击运行即可，无需安装任何依赖。
-          运行时会自动弹出管理员权限提示（UAC），请点击"是"。
-        files: Windows/publish/Sibelius重置.exe
+          下载对应的版本后双击运行即可，无需安装任何依赖。
+          - **Intel/AMD 电脑**：下载 `Sibelius重置-x64.exe`
+          - **Mac (M系列芯片) 的 Windows 虚拟机**：下载 `Sibelius重置-arm64.exe`
+          
+          运行会自动弹出管理员权限提示，请点击"是"。
+        files: |
+          Windows/publish/x64/Sibelius重置-x64.exe
+          Windows/publish/arm64/Sibelius重置-arm64.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
