@@ -215,9 +215,9 @@ namespace SibeliusReset.ViewModels
                 SaveSettings();
                 RefreshStatus();
 
-                // Keep "Success" visible for 1.2 s, then return to normal
+                // Keep "Success" visible for 1.2 s, then close the app
                 await Task.Delay(1200);
-                RefreshStatus();
+                System.Windows.Application.Current.Shutdown();
             }
             catch (Exception ex)
             {
