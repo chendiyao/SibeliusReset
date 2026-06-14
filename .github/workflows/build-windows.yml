@@ -26,13 +26,13 @@ jobs:
     - name: Publish x64 (Intel/AMD)
       run: |
         cd Windows/SibeliusReset
-        dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=none -p:DebugSymbols=false -o ../publish/x64
+        dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=none -p:DebugSymbols=false -o ../publish/x64
         ren ..\publish\x64\Sibelius重置.exe Sibelius重置-x64.exe
 
     - name: Publish arm64 (Mac M1/M2/M3 VM)
       run: |
         cd Windows/SibeliusReset
-        dotnet publish -c Release -r win-arm64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=none -p:DebugSymbols=false -o ../publish/arm64
+        dotnet publish -c Release -r win-arm64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=none -p:DebugSymbols=false -o ../publish/arm64
         ren ..\publish\arm64\Sibelius重置.exe Sibelius重置-arm64.exe
 
     - name: Create Release
